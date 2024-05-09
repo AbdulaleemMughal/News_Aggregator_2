@@ -1,13 +1,11 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.col-md-2 {
+    padding: 0px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.col-md-10 {
+    padding: 0px;
+}
+
+.banner {
+    background-image: url("https://assets-global.website-files.com/65393b768d06ee4c16d24a0b/65a81027126f450dc4d9bf66_Teachable-Blog-LinkedIn-Banners.jpg");
 }
