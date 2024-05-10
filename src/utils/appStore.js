@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import articleReducer from "./articleSlice";
+import newsReducer from "./newsSlice";
+import topNewsReducer from "./topNewsSlice"
 
 const appStore = configureStore({
     reducer:{
-        articles: articleReducer,
-    }
+        news: newsReducer,
+        topNews: topNewsReducer,
+    },
 });
 
 export default appStore;

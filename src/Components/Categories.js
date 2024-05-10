@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import NewsCard from "./NewsCard";
+import { useDispatch, useSelector } from "react-redux";
+import { addNews } from "../utils/newsSlice";
 
 const Categories = () => {
   let api_key = "7308c8e8c82c4a9dbcb4107fbc596cb5";
   const [category, setCategory] = useState("");
-  const [articles, setArticles] = useState([]);
+  const dispatch = useDispatch();
 
   const fetchData = async () => {
     const data = await fetch(
-      `https://newsapi.org/v2/everything?q=${category}&from=2024-04-08&sortBy=publishedAt&apiKey=` +
+      `https://newsapi.org/v2/everything?q=${category}&from=2024-04-09&sortBy=publishedAt&apiKey=` +
         api_key
     );
     const json = await data.json();
 
-    setArticles(json.setArticles);
-
-    console.log(articles);
-
+    dispatch(addNews(json.articles));
   };
+
+  const user = useSelector((store) => store?.news?.isNews);
 
   return (
     <>
@@ -38,7 +39,7 @@ const Categories = () => {
           </button>
         </div>
       </div>
-      {/* {articles.map((articles) => <NewsCard info={articles} />)} */}
+      {user.map((user) => <NewsCard key={user?.source?.id} info={user} />)}
     </>
   );
 };

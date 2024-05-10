@@ -6,7 +6,7 @@ const NewsCard = ({ info }) => {
 
   return (
     <>
-      <div className="pt-1 pb-4 container shadow-md w-5/6 mt-4 hover:shadow-xl">
+      <div className="pt-1 pb-4 container shadow-md w-5/6 my-2 hover:shadow-xl">
         <h1 className="text-xl md:text-3xl mt-6 m-7 text-red-600 underline">
           {info?.title}
         </h1>
@@ -16,6 +16,7 @@ const NewsCard = ({ info }) => {
           </div>
           <div className="col-md-8">
             <h1 className="my-2 font-semibold">Author Name: {info?.author}</h1>
+            <h1 className="my-2 font-semibold">News Name: {info?.source?.name}</h1>
             <p className="font-serif">
               {info?.description}
             </p>
