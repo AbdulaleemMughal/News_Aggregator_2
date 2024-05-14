@@ -6,6 +6,7 @@ import Home from "./Components/Home";
 import Categories from "./Components/Categories";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import Error from "./Components/Error";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
 
@@ -27,6 +28,7 @@ function App() {
           element: <><Header /><Categories /><Footer/></>,
         },
       ],
+      errorElement: <Error />
     },
   ]);
 

@@ -1,124 +1,86 @@
 import React, { useEffect, useState } from "react";
 import NewsCard from "./NewsCard";
 import Shimmer from "./Shimmer";
-import { useDispatch, useSelector } from "react-redux";
-import { addTopNews, addAuthor } from "../utils/topNewsSlice";
 
 const MainPage = () => {
   let api_key = "7308c8e8c82c4a9dbcb4107fbc596cb5";
-  const dispatch = useDispatch();
-  // const [articles, setArticles] = useState([]);
-  const [category, setCategory] = useState("");
-  const [filterItem, setFilterItem] = useState("");
-  const [filterAuthor, setFilterAuthor] = useState("");
-  const user = useSelector((store) => store.topNews.isTopNews);
+  const [articles, setArticles] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [category, setCategory] = useState("general");
+  const [authorName, setAuthorName] = useState("");
+  const [datetime, setDatetime] = useState("");
 
   useEffect(() => {
-    getArticles();
-  }, []);
+    fetchNews();
+  }, [searchQuery, category, authorName, datetime]);
 
-  const getArticles = async () => {
-    const data = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=` +
-        api_key
-    );
-    const json = await data.json();
-    dispatch(addTopNews(json.articles));
-    // setArticles(json.articles);
+  const fetchNews = async () => {
+    try {
+      let url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${api_key}`;
+      if (searchQuery) url += `&q=${searchQuery}`;
+      if (category !== "all") url += `&category=${category}`;
+      if (authorName) url += `&q=${authorName}`;
+      if (datetime) url += `&from=${datetime}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+      setArticles(data.articles);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  // const handleFilteredItems = () => {
-  //   const filteredNews = user.filter((item) =>
-  //     item.source.name.toLowerCase().includes(filterItem.toLowerCase())
-  //   );
-  //   // setArticles(filteredNews);
-  //   dispatch(addTopNews(filteredNews));
-  // };
-
-
-  // const handleAuthorNews = () => {
-  //   const filteredAuthor = user.filter((item) =>
-  //     item.author.toLowerCase().includes(filterAuthor.toLowerCase())
-  //   );
-  //   // setArticles(filteredNews);
-  //   dispatch(addAuthor(filteredAuthor));
-  // };
-
-
-  const handleCategory = async () => {
-    const data = await fetch(`https://newsapi.org/v2/top-headlines?country=us&${category}=business&apiKey=` + api_key);
-    const json = await data.json();
-
-    dispatch(addTopNews(json.articles));
-  };
-
-  return user.length === 0 ? (
+  return articles.length === 0 ? (
     <Shimmer />
   ) : (
     <>
-      <div className="text-center banner py-5">
+      <div className="banner text-center py-4">
+        <h1 className="text-center text-3xl py-3 font-bold">
+          Top News Headlines
+        </h1>
+        <div className="text-center">
+          <input
+            type="text"
+            placeholder="Search by title"
+            className="w-4/6 p-2 rounded-lg mb-4"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <br />
+        </div>
+        <select
+          className="mx-4 p-2 w-[14%] rounded-md"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="all">All Categories</option>
+          <option value="business">Business</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="general">General</option>
+          <option value="health">Health</option>
+          <option value="science">Science</option>
+          <option value="sports">Sports</option>
+          <option value="technology">Technology</option>
+        </select>
         <input
           type="text"
-          placeholder="Search by Name"
-          className="rounded-md border border-gray-300 py-2 px-2 mx-2 mt-10 w-4/6"
-          value={filterItem}
-          onChange={(e) => setFilterItem(e.target.value)}
+          className="mx-4 p-2 w-[14%] rounded-md"
+          placeholder="Search by author name"
+          value={authorName}
+          onChange={(e) => setAuthorName(e.target.value)}
         />
-        <button
-          className="btn btn-outline-success mb-2 font-bold"
-          // onClick={() => handleFilteredItems()}
-        >
-          Search
-        </button>
-        <br />
-
-        <div className="my-5">
-          <div className="flex justify-center">
-            <div className="mx-3">
-              <input
-                type="text"
-                className="rounded-md border border-gray-500 p-2"
-                placeholder="Categories"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              />
-              <button
-                className="btn btn-outline-success ml-1"
-                onClick={() => handleCategory()}
-              >
-                Search
-              </button>
-            </div>
-
-            <div className="mx-3">
-              <input
-                type="text"
-                className="rounded-md border border-gray-500 p-2"
-                placeholder="Author Name"
-                value={filterAuthor}
-                onChange={(e) => setFilterAuthor(e.target.value)}
-              />
-              <button
-                className="btn btn-outline-success ml-1"
-                // onClick={() => handleAuthorNews()}
-              >
-                Search
-              </button>
-            </div>
-            <div className="mx-3">
-              <input
-                type="datetime-local"
-                className="rounded-md border border-gray-500 p-2"
-              />
-              <button className="btn btn-outline-success ml-1">Search</button>
-            </div>
-          </div>
-        </div>
+        <input
+          type="datetime-local"
+          className="mx-4 p-2 w-[14%] rounded-md"
+          value={datetime}
+          onChange={(e) => setDatetime(e.target.value)}
+        />
       </div>
-
-      {user.map((articles) => (
-        <NewsCard key={articles?.source?.id} info={articles} />
-      ))}
+      <div className="card-container">
+        {articles.map((article, index) => (
+          <NewsCard info={article} />
+        ))}
+      </div>
     </>
   );
 };
